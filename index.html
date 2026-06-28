@@ -1,0 +1,86 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tamil Nadu Wedding Checklist (1 Month)</title>
+<style>
+body{font-family:Arial,sans-serif;background:#f5f7fb;margin:0;padding:20px;color:#333}
+.container{max-width:900px;margin:auto;background:#fff;padding:25px;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.1)}
+h1{text-align:center;color:#8b0000}
+details{margin:10px 0;border:1px solid #ddd;border-radius:8px;padding:10px;background:#fafafa}
+summary{font-weight:bold;font-size:18px;cursor:pointer}
+label{display:block;padding:6px 0}
+.progress{position:sticky;top:0;background:#fff;padding:10px 0;margin-bottom:15px}
+progress{width:100%;height:22px}
+button{padding:10px 16px;border:none;background:#8b0000;color:#fff;border-radius:6px;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="progress">
+<h1>🎉 Tamil Nadu Wedding Checklist (1 Month Before)</h1>
+<progress id="bar" value="0" max="100"></progress>
+<p id="status">0% Complete</p>
+<button onclick="resetChecks()">Reset Checklist</button>
+</div>
+
+<script>
+const sections={
+"Invitations":["Distribute remaining invitation cards","Send digital invitations","Call important guests","Confirm guest list"],
+"Venue":["Reconfirm marriage hall booking","Verify timings","Check parking & accommodation"],
+"Priest & Rituals":["Confirm priest availability","Finalize Muhurtham time","Prepare pooja items"],
+"Bride":["Wedding sarees","Jewelry collected","Blouse stitching","Makeup trial","Footwear & accessories"],
+"Groom":["Wedding veshti & shirt","Reception outfit","Shoes & grooming kit"],
+"Jewelry":["Thaali ready","Gold & silver articles"],
+"Catering":["Finalize menu","Confirm guest count"],
+"Decoration":["Stage decoration","Flower garlands","Car decoration"],
+"Photography":["Confirm photographer","Family photo list"],
+"Music":["Book Nadaswaram / Thavil"],
+"Transportation":["Bride & Groom vehicles","Guest transport"],
+"Accommodation":["Hotel bookings","Room allocation"],
+"Gifts":["Return gifts","Tamboolam bags"],
+"Documents":["Aadhaar/PAN","Marriage registration documents"],
+"Finance":["Vendor payments","Emergency cash"],
+"Vendor Confirmation":["Confirm all vendors"],
+"Home Preparation":["Cleaning","Groceries","First aid","Medicines"],
+"Wedding Essentials":["Thaali","Rings","Chargers","Power bank","Safety pins","Water","Snacks"],
+"Family Responsibilities":["Guest reception","Finance coordinator","Transport coordinator"],
+"Timeline":["4 weeks: Finalize guests/vendors","3 weeks: Jewelry & trials","2 weeks: Confirm bookings","1 week: Pack essentials","2 days: Decor & pooja setup","1 day: Rest & documents"]
+};
+
+document.write(Object.entries(sections).map(([k,v],i)=>`
+<details open>
+<summary>${k}</summary>
+${v.map((t,j)=>`<label><input type="checkbox" class="chk" id="c${i}_${j}"> ${t}</label>`).join("")}
+</details>`).join(""));
+
+function update(){
+ const boxes=[...document.querySelectorAll(".chk")];
+ const checked=boxes.filter(b=>b.checked).length;
+ const pct=Math.round((checked/boxes.length)*100);
+ document.getElementById("bar").value=pct;
+ document.getElementById("status").textContent=`${pct}% Complete (${checked}/${boxes.length})`;
+ localStorage.setItem("weddingChecklist",JSON.stringify(boxes.map(b=>b.checked)));
+}
+function load(){
+ const saved=JSON.parse(localStorage.getItem("weddingChecklist")||"[]");
+ document.querySelectorAll(".chk").forEach((b,i)=>{
+   if(saved[i]) b.checked=true;
+   b.onchange=update;
+ });
+ update();
+}
+function resetChecks(){
+ if(confirm("Reset all checklist items?")){
+  localStorage.removeItem("weddingChecklist");
+  document.querySelectorAll(".chk").forEach(b=>b.checked=false);
+  update();
+ }
+}
+window.onload=load;
+</script>
+</div>
+</body>
+</html>
